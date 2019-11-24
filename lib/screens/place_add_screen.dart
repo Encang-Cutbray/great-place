@@ -16,16 +16,17 @@ class _PlaceAddScreenState extends State<PlaceAddScreen> {
   final _titleController = TextEditingController();
   File _pickedImage;
 
-  void _selectImage (File imagePick){
+  void _selectImage(File imagePick) {
     _pickedImage = imagePick;
   }
 
-  void _savePlace(){
-      if (_titleController.text.isEmpty || _pickedImage == null) {
-        return;
-      }
-      Provider.of<GreatPlaceProvider>(context, listen: true).addPlace(_titleController.text, _pickedImage);
-      Navigator.of(context).pop();
+  void _savePlace() async {
+    if (_titleController.text.isEmpty || _pickedImage == null) {
+      return;
+    }
+    Provider.of<GreatPlaceProvider>(context, listen: false)
+        .addPlace(_titleController.text, _pickedImage);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -48,7 +49,9 @@ class _PlaceAddScreenState extends State<PlaceAddScreen> {
                         decoration: InputDecoration(labelText: 'Title'),
                         controller: _titleController,
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 10,
+                      ),
                       ImageInputWidget(_selectImage),
                     ],
                   ),
@@ -59,16 +62,15 @@ class _PlaceAddScreenState extends State<PlaceAddScreen> {
               minWidth: double.infinity,
               height: 50.0,
               child: RaisedButton.icon(
-                elevation: 0,
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                color: Theme.of(context).accentColor,
-                icon: Icon(Icons.add),
-                label: Text(
-                  'Add Place',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                onPressed: _savePlace
-              ),
+                  elevation: 0,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  color: Theme.of(context).accentColor,
+                  icon: Icon(Icons.add),
+                  label: Text(
+                    'Add Place',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: _savePlace),
             ),
           ],
         ),
