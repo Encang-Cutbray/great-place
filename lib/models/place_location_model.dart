@@ -5,7 +5,7 @@ class PlaceLocationModel {
   final double logtitude;
   final String address;
 
-  PlaceLocationModel({
+  const PlaceLocationModel({
     @required this.latitiude,
     @required this.logtitude,
     this.address,

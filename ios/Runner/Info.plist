@@ -51,5 +51,7 @@
 	<string>Need Open Current Location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Open Current Location</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>

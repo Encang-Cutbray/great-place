@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:location/location.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../helpers/location_helper.dart';
-
+import '../helpers/alert_error_helper.dart';
 import '../screens/map_screen.dart';
 
 class LocationInputWidget extends StatefulWidget {
@@ -15,14 +17,32 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   bool _hasDefaultLocation = true;
 
   Future<void> _getCurrentLocation() async {
-    final currentLocation = await Location().getLocation();
-    
-    final staticMapImagePreview = LocationHelper.generateLocationPreviewImage(
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude);
-    setState(() {
-      _previewImageUrl = staticMapImagePreview;
-    });
+    try {
+      final currentLocation = await Location().getLocation();
+      final staticMapImagePreview = LocationHelper.generateLocationPreviewImage(
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude);
+      setState(() {
+        _previewImageUrl = staticMapImagePreview;
+      });
+    } on PlatformException catch (e) {
+      print(e);
+      await AlertErrorHelper.showDialogError(context, e);
+    }
+  }
+
+  Future<void> _selectOnMap() async {
+    final selectedLocation =
+        await Navigator.of(context).pushNamed(MapScreen.routeName);
+    if (selectedLocation == null) {
+      return;
+    }
+
+    /* 
+      Todo: Parsing Value To LatLngObject
+      .............................
+    */
+
   }
 
   @override
@@ -69,9 +89,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             ),
             FlatButton.icon(
               icon: Icon(Icons.map),
-              onPressed: () {
-                Navigator.of(context).pushNamed(MapScreen.routeName);
-              },
+              onPressed: _selectOnMap,
               textColor: Theme.of(context).primaryColor,
               label: Text('Select On Map'),
             )
