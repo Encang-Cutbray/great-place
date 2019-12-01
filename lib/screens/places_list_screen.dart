@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './place_add_screen.dart';
 import '../providers/great_places_provider.dart';
+
+import './place_add_screen.dart';
+import './place_detail_screen.dart';
 
 class PlacesList extends StatelessWidget {
   @override
@@ -22,28 +24,39 @@ class PlacesList extends StatelessWidget {
       body: FutureBuilder(
         future: Provider.of<GreatPlaceProvider>(context, listen: false)
             .fetchAndSetPlaces(),
-        builder: (ctx, snapshot) => snapshot.connectionState ==
-                ConnectionState.waiting
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Consumer<GreatPlaceProvider>(
-                builder: (_, listGreatPlace, child) =>
-                    listGreatPlace.item.length <= 0
-                        ? Center(
-                            child: Text('Add Some Great Places'),
-                          )
-                        : ListView.builder(
-                            itemCount: listGreatPlace.item.length,
-                            itemBuilder: (ctx, index) => ListTile(
-                              leading: CircleAvatar(
-                                backgroundImage:
-                                    FileImage(listGreatPlace.item[index].image),
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Consumer<GreatPlaceProvider>(
+                    builder: (_, listGreatPlace, child) =>
+                        listGreatPlace.item.length <= 0
+                            ? Center(
+                                child: Text('Add Some Great Places'),
+                              )
+                            : ListView.builder(
+                                itemCount: listGreatPlace.item.length,
+                                itemBuilder: (ctx, index) => ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage: FileImage(
+                                      listGreatPlace.item[index].image,
+                                    ),
+                                  ),
+                                  title: Text(
+                                    listGreatPlace.item[index].title,
+                                  ),
+                                  subtitle: Text(
+                                    listGreatPlace.item[index].location.address,
+                                  ),
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      PlaceDetailScreen.routeName,
+                                    arguments: listGreatPlace.item[index].id);
+                                  },
+                                ),
                               ),
-                              title: Text(listGreatPlace.item[index].title),
-                            ),
-                          ),
-              ),
+                  ),
       ),
       // greatListPlaces.length <= 0
       //     ? Center(

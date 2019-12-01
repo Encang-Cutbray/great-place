@@ -8,52 +8,52 @@ import '../helpers/alert_error_helper.dart';
 import '../screens/map_screen.dart';
 
 class LocationInputWidget extends StatefulWidget {
+  final Function onSelectePlace;
+
+  LocationInputWidget(this.onSelectePlace);
+
   @override
   _LocationInputWidgetState createState() => _LocationInputWidgetState();
 }
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
   String _previewImageUrl;
-  bool _hasDefaultLocation = true;
+
+  _showPreview(double lat, double long) {
+    final staticMapImagePreview = LocationHelper.generateLocationPreviewImage(
+        latitude: lat, longitude: long);
+    setState(() {
+      _previewImageUrl = staticMapImagePreview;
+    });
+  }
 
   Future<void> _getCurrentLocation() async {
     try {
       final currentLocation = await Location().getLocation();
-      final staticMapImagePreview = LocationHelper.generateLocationPreviewImage(
-          latitude: currentLocation.latitude,
-          longitude: currentLocation.longitude);
-      setState(() {
-        _previewImageUrl = staticMapImagePreview;
-      });
+      _showPreview(currentLocation.latitude, currentLocation.longitude);
+      widget.onSelectePlace(
+        currentLocation.latitude,
+        currentLocation.longitude,
+      );
     } on PlatformException catch (e) {
-      print(e);
       await AlertErrorHelper.showDialogError(context, e);
     }
   }
 
   Future<void> _selectOnMap() async {
+    LatLng locationWasSelect;
+
     final selectedLocation =
         await Navigator.of(context).pushNamed(MapScreen.routeName);
     if (selectedLocation == null) {
       return;
     }
-
-    /* 
-      Todo: Parsing Value To LatLngObject
-      .............................
-    */
-
-  }
-
-  @override
-  void didChangeDependencies() {
-    if (_hasDefaultLocation) {
-      _getCurrentLocation();
-    }
-    setState(() {
-      _hasDefaultLocation = false;
-    });
-    super.didChangeDependencies();
+    locationWasSelect = selectedLocation;
+    _showPreview(locationWasSelect.latitude, locationWasSelect.longitude);
+    widget.onSelectePlace(
+      locationWasSelect.latitude,
+      locationWasSelect.longitude,
+    );
   }
 
   @override

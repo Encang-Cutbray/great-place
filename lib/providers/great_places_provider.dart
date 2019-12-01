@@ -3,7 +3,10 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import '../helpers/db_helper_dart.dart';
+import '../helpers/location_helper.dart';
+
 import '../models/place_model.dart';
+import '../models/place_location_model.dart';
 
 class GreatPlaceProvider with ChangeNotifier {
   List<PlaceModel> _item = [];
@@ -12,12 +15,28 @@ class GreatPlaceProvider with ChangeNotifier {
     return [..._item];
   }
 
-  void addPlace(String titlePlace, File imagePlace) async {
+  PlaceModel findById(String id){
+    return _item.firstWhere((place) => place.id == id);
+  }
+
+  Future<void> addPlace(String titlePlace, File imagePlace,
+      PlaceLocationModel pickedLocation) async {
+    final address = await LocationHelper.getAddress(
+      pickedLocation.latitiude,
+      pickedLocation.logtitude,
+    );
+
+    final latLangWithAddress = PlaceLocationModel(
+      latitiude: pickedLocation.latitiude,
+      logtitude: pickedLocation.logtitude,
+      address: address,
+    );
+
     final newPlace = PlaceModel(
       id: DateTime.now().toIso8601String(),
       title: titlePlace,
       image: imagePlace,
-      location: null,
+      location: latLangWithAddress,
     );
     _item.add(newPlace);
     await _insertToDatabase(newPlace);
@@ -31,9 +50,13 @@ class GreatPlaceProvider with ChangeNotifier {
           (places) => PlaceModel(
             id: places['id'],
             title: places['title'],
-            location: null,
-            image: File(
+             image: File(
               places['image_path'],
+            ),
+            location: PlaceLocationModel(
+              latitiude: places['latitude'],
+              logtitude: places['longitude'],
+              address: places['address'],
             ),
           ),
         )
@@ -47,7 +70,10 @@ class GreatPlaceProvider with ChangeNotifier {
       {
         'id': dataNewPlace.id,
         'title': dataNewPlace.title,
-        'image_path': dataNewPlace.image.path
+        'image_path': dataNewPlace.image.path,
+        'latitude': dataNewPlace.location.latitiude,
+        'longitude': dataNewPlace.location.logtitude,
+        'address': dataNewPlace.location.address
       },
     );
   }
