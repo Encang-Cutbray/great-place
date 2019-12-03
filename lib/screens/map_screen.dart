@@ -62,7 +62,6 @@ class _MapScreenState extends State<MapScreen> {
             zoom: 16,
           ),
           onTap: widget.isSelecting ? _selectLocation : null,
-          polygons: {Polygon(polygonId: PolygonId('kopi'))},
           markers: _pickedLocation == null && widget.isSelecting
               ? null
               : {
