@@ -23,12 +23,12 @@ class GreatPlaceProvider with ChangeNotifier {
       PlaceLocationModel pickedLocation) async {
     final address = await LocationHelper.getAddress(
       pickedLocation.latitiude,
-      pickedLocation.logtitude,
+      pickedLocation.longitude,
     );
 
     final latLangWithAddress = PlaceLocationModel(
       latitiude: pickedLocation.latitiude,
-      logtitude: pickedLocation.logtitude,
+      longitude: pickedLocation.longitude,
       address: address,
     );
 
@@ -55,7 +55,7 @@ class GreatPlaceProvider with ChangeNotifier {
             ),
             location: PlaceLocationModel(
               latitiude: places['latitude'],
-              logtitude: places['longitude'],
+              longitude: places['longitude'],
               address: places['address'],
             ),
           ),
@@ -72,7 +72,7 @@ class GreatPlaceProvider with ChangeNotifier {
         'title': dataNewPlace.title,
         'image_path': dataNewPlace.image.path,
         'latitude': dataNewPlace.location.latitiude,
-        'longitude': dataNewPlace.location.logtitude,
+        'longitude': dataNewPlace.location.longitude,
         'address': dataNewPlace.location.address
       },
     );

@@ -16,8 +16,7 @@ class PlaceDetailScreen extends StatelessWidget {
     final selectedPlace =
         Provider.of<GreatPlaceProvider>(context, listen: false)
             .findById(userPlaceId);
-    print(selectedPlace.location.logtitude);
-    print(selectedPlace.title);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(selectedPlace.title),
@@ -48,6 +47,9 @@ class PlaceDetailScreen extends StatelessWidget {
             child: Text("View On Map"),
             textColor: Theme.of(context).primaryColor,
             onPressed: () {
+              print(selectedPlace.location.latitiude);
+              print(selectedPlace.location.longitude);
+              // return;
               Navigator.of(context).push(
                 MaterialPageRoute(
                   fullscreenDialog: true,
@@ -55,7 +57,7 @@ class PlaceDetailScreen extends StatelessWidget {
                     isSelecting: false,
                     initialLocation: PlaceLocationModel(
                       latitiude: selectedPlace.location.latitiude,
-                      logtitude: selectedPlace.location.logtitude,
+                      longitude: selectedPlace.location.longitude,
                     ),
                   ),
                 ),

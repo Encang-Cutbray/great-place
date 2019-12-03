@@ -15,7 +15,7 @@ class MapScreen extends StatefulWidget {
   MapScreen({
     this.initialLocation = const PlaceLocationModel(
       latitiude: 37.4219983,
-      logtitude: -122.084,
+      longitude: -122.084,
     ),
     this.isSelecting = true,
   });
@@ -57,19 +57,21 @@ class _MapScreenState extends State<MapScreen> {
           initialCameraPosition: CameraPosition(
             target: LatLng(
               widget.initialLocation.latitiude,
-              widget.initialLocation.logtitude,
+              widget.initialLocation.longitude,
             ),
             zoom: 16,
           ),
           onTap: widget.isSelecting ? _selectLocation : null,
+          polygons: {Polygon(polygonId: PolygonId('kopi'))},
           markers: _pickedLocation == null && widget.isSelecting
               ? null
               : {
                   Marker(
                     markerId: MarkerId('marker-id'),
-                    position: _pickedLocation,
+                    position: _pickedLocation ?? LatLng(widget.initialLocation.latitiude, widget.initialLocation.longitude),
                   ),
                 },
+                
         ),
       ),
     );

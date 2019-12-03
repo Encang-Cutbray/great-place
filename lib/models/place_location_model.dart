@@ -2,12 +2,12 @@ import 'package:flutter/foundation.dart';
 
 class PlaceLocationModel {
   final double latitiude;
-  final double logtitude;
+  final double longitude ;
   final String address;
 
   const PlaceLocationModel({
     @required this.latitiude,
-    @required this.logtitude,
+    @required this.longitude,
     this.address,
   });
 }

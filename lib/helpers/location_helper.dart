@@ -23,7 +23,9 @@ class LocationHelper {
 
   static Future<String> getAddress(double latitude, double longitude) async {
     final response = await LocationHelper._greatLocation(
-        latitude: latitude, longitude: longitude);
+      latitude: latitude,
+      longitude: longitude,
+    );
     return jsonDecode(response.body)['results'][0]['formatted_address'];
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/great_places_provider.dart';
-
 import '../models/place_location_model.dart';
 
 import '../widgets/image_input_widget.dart';
@@ -24,7 +23,7 @@ class _PlaceAddScreenState extends State<PlaceAddScreen> {
 
   void _selectPlace(double latitude, double longitude) {
     _pickedLocation = PlaceLocationModel(
-        latitiude: latitude, logtitude: longitude, address: null);
+        latitiude: latitude, longitude: longitude, address: null);
   }
 
   void _selectImage(File imagePick) {
